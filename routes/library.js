@@ -44,19 +44,24 @@ router.post("/feedback", (req, res) => {
    ADMIN ROUTES
 ===================== */
 
-// Admin dashboard data
+// =====================
+// ADMIN DASHBOARD API
+// =====================
 router.get("/admin/stats", async (req, res) => {
-  const totalRequests = await Request.countDocuments();
-  const uniqueUsers = await Request.distinct("requestedBy");
+  try {
+    const totalRequests = await Request.countDocuments();
+    const uniqueUsers = await Request.distinct("requestedBy");
+    const allRequests = await Request.find().sort({ createdAt: -1 });
 
-  const allRequests = await Request.find().sort({ createdAt: -1 });
-
-  res.json({
-    totalRequests,
-    totalUsers: uniqueUsers.length,
-    users: uniqueUsers,
-    requests: allRequests
-  });
+    res.json({
+      totalRequests,
+      totalUsers: uniqueUsers.length,
+      requests: allRequests
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Admin data fetch failed" });
+  }
 });
+
 
 module.exports = router;
