@@ -63,5 +63,30 @@ router.get("/admin/stats", async (req, res) => {
   }
 });
 
+/* =========================
+   ADMIN DASHBOARD DATA
+========================= */
+router.get("/admin/stats", async (req, res) => {
+  try {
+    const requests = await Request.find().sort({ createdAt: -1 });
+
+    const totalRequests = requests.length;
+
+    const uniqueUsers = new Set(
+      requests.map(r => r.requestedBy)
+    ).size;
+
+    res.json({
+      totalRequests,
+      totalUsers: uniqueUsers,
+      requests
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Admin stats error" });
+  }
+});
+
+
 
 module.exports = router;
