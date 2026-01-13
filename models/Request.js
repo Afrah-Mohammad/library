@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
-const RequestSchema = new mongoose.Schema({
+const requestSchema = new mongoose.Schema({
   bookName: String,
   author: String,
   requestedBy: String,
-  status: { type: String, default: "Requested" }
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-module.exports = mongoose.model("Request", RequestSchema);
+module.exports = mongoose.model("Request", requestSchema);
